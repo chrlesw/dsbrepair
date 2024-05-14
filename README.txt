@@ -1,6 +1,8 @@
 ############################################# 
  Charles I. White. 06 march 2024
- CNRS UMR 6293, Faculté de Médecine, Clermont-Ferrand, France
+ CNRS UMR 6293, Inserm U1103, 
+ Faculté de Médecine,Université Clermont Auvergne,
+ Clermont-Ferrand, France
 #############################################
 
 A set of Python and R scripts for analyses of DSB repair from paired-end (Illumina type) or long amplicon (Oxford Nanopore) DNA sequences.
