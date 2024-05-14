@@ -39,3 +39,47 @@ coreutils
 openjdk
 
 #############################################
+##########        outputs       #############
+#############################################
+
+The following folders will be found in the _alignments_variants or _alignments_variants_ont output folder
+ note that r1p = number of times found on plus strand 
+           r1m = number of times found on minus strand
+
+_aln_files
+      - contains ".paf" alignments of the sequence files to the reference
+_arcs
+     - ".png" images of the Arc plots of the deletions affecting the cut-site windons
+     - tables with one deletion per line
+     - _delLen_vs_mean_Mhomol__exp.tsv gives, for each deletion length, the mean number 
+          of nt of microhomology potentially involved in the deletions 
+          (note that potential microhomologies are scored up to 9 nt, so the "9 nt" class will include any deletions with more than 9)
+
+_bam_files
+     - sorted, indexed BAM files with the mapping of the sequence files to the reference
+
+_junctions
+     - _delsList.txt : 
+          Description of each deletion (one per line, sorted by length), showing:
+               Chromosome ; Start nt ; End nt ; deletion length ; r1p ; r1m
+    - _delsJunctions.txt : 
+          For each analysed sequence file, shows the numbers of deletions with a given number of nt of microhomology (these are also grouped together in the _stats_mhomol_Junctions.txt file
+          This is followed by a tab-separated, detailed description of each deletion, showing:
+               "10_nt_upstream ( first and last 10 nt of deletion) 10_nt_downstream" ; deletion length ; nt of microhomology ; Chromosome ; Start nt ; End nt ; r1p ; r1m
+          (note that potential microhomologies are scored up to 9 nt, so the "9 nt" class will include any deletions with more than 9)
+     - _stats_mhomol_Junctions.txt summarises the number and the proportion of deletions afecting the cut-site windows  
+          (each line extracted from the corresponding _delsJunctions.txt file) 
+
+_vars
+     - _vars.txt : output of variant caller script
+     - _indelsList.txt: table of deletions, insertions and substitutions affecting the cut-site windows.
+     - files with tables of deletions, insertions and substitutions affecting the cut-site windows. 3 tables are given for 2-cut-site analyses:  all dels (ins, sub) and also individual tables for dels (ins, sub) affecting target_t1 or target_t2.
+     - _mHomolDelsList.txt information for each deletion affecting the cut-site windows:
+            DEL     Chr  start     end  length    r1p  r1m  length_mhomol
+     - __freqs_all.tsv (...): 
+          summary tables of numbers of deletions, insertions and substitutions affecting the cut-site windows, for each deletion or insertion length. These are also fgiven as fractions of total events in each class (__normfreqs_all.tsv). For 2-cut-site analyses include tables with all dels (ins, sub) and also individual tables for dels (ins, sub) affecting target_t1 or target_t2.
+
+_vcf_files : indexed vcf files 
+
+#############################################
+#############################################
