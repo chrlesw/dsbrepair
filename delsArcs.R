@@ -5,13 +5,19 @@
 
 ## this script plots arcs joining the start and end of deletion breakpoints, 
 ## the lines can be coloured according to the number of nt of microhomology potentially involved in the deletion 
-##   but this is less informative than originally thought and in practice is normally not done.
+##   but this is less informative than originally thought and in practice is rarely used.
 ##
 # for input the script requires deletion list text files with one event per line in format:
 # "Type", "Chromosome", "Start", "End", "Length", "nt mhomol"
 
  # arguments in the call : theDir isNpore targ inclFocus numsites plotMhomol
-
+#       theDir : path to the folder containing the deletion list files
+#       isNpore : are these Nanopore sequences?  (yes/no) 
+#          (this is just to take into account different amplicon lengths at the same target)
+#       targ : name of target locus (need to generate new clause for new targets = see line 142... below)
+#       inclFocus : generate second plot focussed on region surrounding the cut-site(s) (yes/no) 
+#       numsites : number of target sites (1 or 2)
+#       plotMhomol : use microhomology information to colour arcs (yes/no)
 
 # Different target sites from our current work are left in as examples, but users will need to add or edit to include their own targets. 
 
@@ -141,8 +147,6 @@ if (isNpore == "yes") {
             df_out <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(5187987, 5188243), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(5186670, 5189470)) + scale_x_continuous(breaks=seq(5186670, 5189470, 100))   
         } else if (plotMhomol == "2colours") { 
           df_out <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(5187987, 5188243), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(5186670, 5189470)) + scale_x_continuous(breaks=seq(5186670, 5189470, 100)) + scale_edge_colour_gradient(limits = c(0,2), low = "blue", high = "blue" , na.value = "red")
-        } else if (plotMhomol == "testing") { 
-          df_out <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(5187987, 5188243), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(5186670, 5189470)) + scale_x_continuous(breaks=seq(5186670, 5189470, 100)) + scale_edge_colour_gradient(limits = c(0,9), low = "red", high = "blue" , na.value = "black")
         } else { 
           df_out <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(5187987, 5188243), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(5186670, 5189470)) + scale_x_continuous(breaks=seq(5186670, 5189470, 100)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
         }
@@ -155,12 +159,9 @@ if (isNpore == "yes") {
 
     else if (targ == "chr3_92"){
         if (plotMhomol == "no") {
-          df_out <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(12113733, 12113355), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(12111994, 12114973)) + scale_x_continuous(breaks=seq(12111994, 12114994, 100))  
-          
+          df_out <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(12113733, 12113355), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(12111994, 12114973)) + scale_x_continuous(breaks=seq(12111994, 12114994, 100))       
         } else if (plotMhomol == "2colours") { 
           df_out <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(12113733, 12113355), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  aes(colour=Microhomology), alpha=.5) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(12111994, 12114973)) + scale_x_continuous(breaks=seq(12111994, 12114973, 100)) + scale_edge_colour_gradient(limits = c(0,2), low = "blue", high = "blue" , na.value = "red")
-        } else if (plotMhomol == "testing") { 
-          df_out <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(12113733, 12113355), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  aes(colour=Microhomology), alpha=.5) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(12111994, 12114973)) + scale_x_continuous(breaks=seq(12111994, 12114973, 100)) + scale_edge_colour_gradient(limits = c(0,8), low = "yellow", high = "red" , na.value = "blue")
         } else { 
           df_out <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(12113733, 12113355), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  aes(colour=Microhomology), alpha=.5) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(12111994, 12114973)) + scale_x_continuous(breaks=seq(12111994, 12114973, 100)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
         }
@@ -168,79 +169,6 @@ if (isNpore == "yes") {
         if (inclFocus == "yes") {
             df_out_focus_site1 <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(12113733, 12113355), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(12113700, 12113760)) + scale_x_continuous(breaks=seq(12113700, 12113760, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
             df_out_focus_site2 <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(12113733, 12113355), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(12113325, 12113385)) + scale_x_continuous(breaks=seq(12113325, 12113385, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
-        }
-    }
-    else if (targ == "ercc1_2ab"){
-        if (plotMhomol == "no") {
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(1479622, 1479796), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1478104, 1481076) ) + scale_x_continuous(breaks=seq(1478104, 1481076, 50))    
-        } else if (plotMhomol == "2colours") { 
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(1479622, 1479796), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1478104, 1481076) ) + scale_x_continuous(breaks=seq(1478104, 1481076, 50)) + scale_edge_colour_gradient(limits = c(0,2), low = "blue", high = "blue" , na.value = "red")
-        }  else { 
-          df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(1479622, 1479796), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1478104, 1481076) ) + scale_x_continuous(breaks=seq(1478104, 1481076, 50)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
-        }
-
-        if (inclFocus == "yes") {
-            df_out_focus_site1 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(1479622, 1479796), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1478104, 1481076) ) + scale_x_continuous(breaks=seq(1478104, 1481076, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
-            df_out_focus_site2 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(1479622, 1479796), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1478104, 1481076) ) + scale_x_continuous(breaks=seq(1478104, 1481076, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
-        }    
-    }
-    else if (targ == "ercc1_2cd"){
-    }
-    else if (targ == "xpf_2ab"){
-        if (plotMhomol == "no") {
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(16476847, 16476711), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(16475300, 16478300) ) + scale_x_continuous(breaks=seq(16475300, 16478300, 50)) 
-        } else if (plotMhomol == "2colours") { 
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(16476847, 16476711), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(16475300, 16478300) ) + scale_x_continuous(breaks=seq(16475300, 16478300, 50)) + scale_edge_colour_gradient(limits = c(0,2), low = "blue", high = "blue" , na.value = "red")
-        } else { 
-          df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(16476847, 16476711), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(16475300, 16478300) ) + scale_x_continuous(breaks=seq(16475300, 16478300, 50)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
-        }
-
-        if (inclFocus == "yes") {
-            df_out_focus_site1 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(16476847, 16476711), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(16476817, 16476877) ) + scale_x_continuous(breaks=seq(16476817, 16476877, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
-            df_out_focus_site2 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(16476847, 16476711), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(16476681, 16476741) ) + scale_x_continuous(breaks=seq(16476681, 16476741, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
-        }    
-    }
-    else if (targ == "send1_2ab"){
-        if (plotMhomol == "no") {
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(18132565, 18132121), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(18130750, 18133728) ) + scale_x_continuous(breaks=seq(18130750, 18133728, 50))
-        } else  if (plotMhomol == "2colours") { 
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(18132565, 18132121), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(18130750, 18133728) ) + scale_x_continuous(breaks=seq(18130750, 18133728, 50)) + scale_edge_colour_gradient(limits = c(0,2), low = "blue", high = "blue" , na.value = "red")
-        } else { 
-          df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(18132565, 18132121), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(18130750, 18133728) ) + scale_x_continuous(breaks=seq(18130750, 18133728, 50)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
-        }
-
-        if (inclFocus == "yes") {
-            df_out_focus_site1 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(18132565, 18132121), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(18130750, 18133728) ) + scale_x_continuous(breaks=seq(18130750, 18133728, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
-            df_out_focus_site2 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(18132565, 18132121), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(18130750, 18133728) ) + scale_x_continuous(breaks=seq(18130750, 18133728, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
-        }    
-    }
-    else if (targ == "iugus"){
-        #(for amplicon 2940bp)
-        if (plotMhomol == "no") {
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(713), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1, 2940) ) + scale_x_continuous(breaks=seq(1, 2940, 100)) 
-        } else  if (plotMhomol == "2colours") { 
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(713), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1, 2940) ) + scale_x_continuous(breaks=seq(1, 2940, 100)) + scale_edge_colour_gradient(limits = c(0,2), low = "blue", high = "blue" , na.value = "red")#, breaks=c(2,4,6,8)) 
-        } else { 
-          df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(713), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1, 2940) ) + scale_x_continuous(breaks=seq(1, 2940, 100)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")#, breaks=c(2,4,6,8)) 
-        }
-
-        if (inclFocus == "yes"){
-            df_out_focus_site1 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(713), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(690, 740), ylim = c(0,10) ) + scale_x_continuous(breaks=seq(690, 740, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") #, breaks=c(2,4,6,8)) 
-        }
-    }
-    
-    else if (targ == "chr2_184"){
-        if (plotMhomol == "no") {
-            df_out <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(13655647, 13655981), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, alpha=.5) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(13654306, 13657310)) + scale_x_continuous(breaks=seq(13654306, 13657310, 100)) 
-        } else  if (plotMhomol == "2colours") { 
-            df_out <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(13655647, 13655981), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  aes(colour=Microhomology), alpha=.5) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(13654306, 13657310)) + scale_x_continuous(breaks=seq(13654306, 13657310, 100)) + scale_edge_colour_gradient(limits = c(0,2), low = "blue", high = "blue" , na.value = "red")
-        } else { 
-          df_out <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(13655647, 13655981), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  aes(colour=Microhomology), alpha=.5) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(13654306, 13657310)) + scale_x_continuous(breaks=seq(13654306, 13657310, 100)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
-        }
-
-        if (inclFocus == "yes") {
-            df_out_focus_site1 <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(13655647, 13655981), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(13655597, 13655697)) + scale_x_continuous(breaks=seq(13655597, 13655697, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
-            df_out_focus_site2 <- ggraph(dels_tidy, layout = 'linear')  + geom_vline(xintercept = c(13655647, 13655981), colour="darkgoldenrod1") + geom_edge_arc(strength = 1,  aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(13655931, 13656031)) + scale_x_continuous(breaks=seq(13655931, 13656031, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
         }
     }
 }
@@ -276,55 +204,6 @@ else if (isNpore == "no") {
             df_out_focus_site2 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(1479622, 1479796), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1479766, 1479826) ) + scale_x_continuous(breaks=seq(1479766, 1479826, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
         }
     }
-
-    else if (targ == "ercc1_2cd"){
-        if (plotMhomol == "no") {
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(1479623, 1479778), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1479521, 1479999) ) + scale_x_continuous(breaks=seq(1479521, 1479999, 50)) 
-        } else  if (plotMhomol == "2colours") { 
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(1479623, 1479778), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1479521, 1479999) ) + scale_x_continuous(breaks=seq(1479521, 1479999, 50)) + scale_edge_colour_gradient(limits = c(0,2), low = "blue", high = "blue" , na.value = "red")
-        } else { 
-          df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(1479623, 1479778), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1479521, 1479999) ) + scale_x_continuous(breaks=seq(1479521, 1479999, 50)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
-        }
-
-        if (inclFocus == "yes") {
-            df_out_focus_site1 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(1479623, 1479778), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1479593, 1479653) ) + scale_x_continuous(breaks=seq(1479593, 1479653, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
-            df_out_focus_site2 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(1479623, 1479778), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(1479748, 1479808) ) + scale_x_continuous(breaks=seq(1479748, 1479808, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
-        }
-    }
-
-    else if (targ == "xpf_2ab"){
-        if (plotMhomol == "no") {
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(16476847, 16476711), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(16475300, 16478300) ) + scale_x_continuous(breaks=seq(16475300, 16478300, 50))
-        } else  if (plotMhomol == "2colours") { 
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(16476847, 16476711), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(16475300, 16478300) ) + scale_x_continuous(breaks=seq(16475300, 16478300, 50)) + scale_edge_colour_gradient(limits = c(0,2), low = "blue", high = "blue" , na.value = "red")
-        } else { 
-          df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(16476847, 16476711), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(16475300, 16478300) ) + scale_x_continuous(breaks=seq(16475300, 16478300, 50)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
-        }
-
-        if (inclFocus == "yes") {
-            df_out_focus_site1 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(16476847, 16476711), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(16476817, 16476877) ) + scale_x_continuous(breaks=seq(16476817, 16476877, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
-            df_out_focus_site2 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(16476847, 16476711), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(16476681, 16476741) ) + scale_x_continuous(breaks=seq(16476681, 16476741, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
-        }
-    }
-
-    else if (targ == "send1_2cd"){
-        if (plotMhomol == "no") {
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(18131893, 18132057), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(18131752, 18132152) ) + scale_x_continuous(breaks=seq(18131752, 18132152, 50)) 
-        } else if (plotMhomol == "2colours") { 
-            df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(18131893, 18132057), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(18131752, 18132152) ) + scale_x_continuous(breaks=seq(18131752, 18132152, 50)) + scale_edge_colour_gradient(limits = c(0,2), low = "blue", high = "blue" , na.value = "red")
-        } else { 
-          df_out <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(18131893, 18132057), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(18131752, 18132152) ) + scale_x_continuous(breaks=seq(18131752, 18132152, 50)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red")
-        }
-
-        if (inclFocus == "yes") {
-            df_out_focus_site1 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(18131893, 18132057), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(18131863, 18131923) ) + scale_x_continuous(breaks=seq(18131863, 18131923, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
-            df_out_focus_site2 <- ggraph(dels_tidy, layout = 'linear') + geom_vline(xintercept = c(18131893, 18132057), colour="darkgoldenrod1") + geom_edge_arc(strength = 1, aes(colour=Microhomology), alpha=.2) + deletions_theme + labs(x = "Coordinates (bp)", subtitle = "") + coord_cartesian(xlim = c(18132027, 18132087) ) + scale_x_continuous(breaks=seq(18132027, 18132087, 5)) + scale_edge_colour_gradient(limits = c(0,5), low = "blue", high = "orange" , na.value = "red") 
-        }
-    }
-
-    else if (targ == "send1_2ab"){
-    }
-
 }
 ########################################################################
    
